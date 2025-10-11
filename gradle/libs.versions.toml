@@ -1,0 +1,20 @@
+[versions]
+spring-boot-version = "3.3.4"
+spring-dependency-management = "1.1.7"
+lombok = "1.18.34"
+junit-platform = "1.10.2"
+
+[libraries]
+spring-boot-core={ module = "org.springframework.boot:spring-boot-starter-webmvc"}
+spring-rest-client={ module = "org.springframework.boot:spring-boot-starter-restclient" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+spring-boot-test={ module = "org.springframework.boot:spring-boot-starter-test" }
+junit-launcher={ module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
+
+
+[bundles]
+
+
+[plugins]
+spring-boot = { id = "org.springframework.boot" , version.ref = "spring-boot-version"}
+spring-dependency = { id ="io.spring.dependency-management" , version.ref ="spring-dependency-management" }
