@@ -9,5 +9,6 @@ repositories{
 
 
 dependencies{
-
+    implementation(libs.spring.boot.plugin)
+    implementation(libs.spring.dependency.plugin)
 }

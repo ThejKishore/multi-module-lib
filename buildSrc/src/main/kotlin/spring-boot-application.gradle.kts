@@ -1,10 +1,17 @@
 plugins{
-    id("spring-boot-application")
+    java
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
 }
 
+val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 repositories {
     mavenCentral()
+    mavenLocal()
 }
+
+
+
 
 dependencies {
     implementation(project(":example-lib"))
@@ -17,7 +24,7 @@ dependencies {
     runtimeOnly("com.h2database:h2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testRuntimeOnly(libs.junit.launcher)
+    testRuntimeOnly(libs.findLibrary("junit-launcher").get())
 }
 
 java {

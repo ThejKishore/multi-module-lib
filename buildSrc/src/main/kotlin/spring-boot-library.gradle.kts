@@ -1,23 +1,23 @@
 plugins{
-    id("spring-boot-application")
+    `java-library`
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
 }
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
-dependencies {
-    implementation(project(":example-lib"))
-    implementation(project(":example-b-lib"))
-    implementation(project(":example-c-lib"))
+val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
+dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    runtimeOnly("com.h2database:h2")
-
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testRuntimeOnly(libs.junit.launcher)
+    testRuntimeOnly(libs.findLibrary("junit-launcher").get())
+    testRuntimeOnly("com.h2database:h2")
 }
 
 java {
@@ -29,3 +29,8 @@ java {
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
+
+
+//    // Disable Spring Boot executable jar for library modules; keep plain jar
+tasks.named("bootJar") { enabled = false }
+tasks.named("jar") { enabled = true }

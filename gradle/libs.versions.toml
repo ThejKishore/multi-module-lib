@@ -11,6 +11,9 @@ lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 spring-boot-test={ module = "org.springframework.boot:spring-boot-starter-test" }
 junit-launcher={ module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
 
+# plugins library
+spring-boot-plugin= { module ="org.springframework.boot:org.springframework.boot.gradle.plugin" ,version.ref = "spring-boot-version" }
+spring-dependency-plugin= { module ="io.spring.dependency-management:io.spring.dependency-management.gradle.plugin" ,version.ref ="spring-dependency-management" }
 
 [bundles]
 
