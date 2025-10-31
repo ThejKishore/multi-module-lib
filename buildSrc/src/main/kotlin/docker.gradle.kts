@@ -89,10 +89,14 @@ val imageNameProp = providers.gradleProperty("docker.imageName").orElse(rootProj
 val imageTagProp = providers.gradleProperty("docker.imageTag").orElse("latest")
 val registryProp = providers.gradleProperty("docker.registry").orElse("")
 
+val dockerExecutable = providers.systemProperty("docker.executable")
+    .orElse(providers.environmentVariable("DOCKER_EXECUTABLE"))
+    .orElse("/usr/local/bin/docker")
+
 val validateDocker = tasks.register<Exec>("validateDocker") {
     group = "docker"
     description = "Validate that Docker daemon/CLI is available and running"
-    commandLine("docker", "info")
+    commandLine(dockerExecutable.get(), "info")
 }
 
 val generateDockerfile = tasks.register("generateDockerfile", GenerateDockerfile::class) {
@@ -109,7 +113,7 @@ val dockerBuildImage = tasks.register<Exec>("dockerBuildImage") {
     doFirst {
         val name = imageNameProp.get()
         val tag = imageTagProp.get()
-        commandLine("docker", "build", "-t", "$name:$tag", "-f", "Dockerfile", ".")
+        commandLine(dockerExecutable.get(), "build", "-t", "$name:$tag", "-f", "Dockerfile", ".")
     }
 }
 
@@ -123,7 +127,7 @@ val dockerTagImage = tasks.register<Exec>("dockerTagImage") {
         val tag = imageTagProp.get()
         val registry = registryProp.get()
         val remote = "$registry/$name:$tag"
-        commandLine("docker", "tag", "$name:$tag", remote)
+        commandLine(dockerExecutable.get(), "tag", "$name:$tag", remote)
         logger.lifecycle("Tagged image as $remote")
     }
 }
@@ -139,7 +143,7 @@ val dockerPushImage = tasks.register<Exec>("dockerPushImage") {
         val tag = imageTagProp.get()
         val registry = registryProp.get()
         val remote = "$registry/$name:$tag"
-        commandLine("docker", "push", remote)
+        commandLine(dockerExecutable.get(), "push", remote)
         logger.lifecycle("Pushed image $remote")
     }
 }
