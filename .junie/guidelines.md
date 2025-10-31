@@ -1,7 +1,5 @@
 # Project Guidelines
 
-Generated: 2025-10-29 23:57 (local time)
-
 ## Coding Conventions
 - Language/Frameworks: Java (Spring Boot, Spring MVC, Spring Data JPA), Gradle Kotlin DSL.
 - Packaging:

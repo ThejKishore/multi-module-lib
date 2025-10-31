@@ -146,3 +146,60 @@ If your consumer is a Spring application, the Spring Dependency Management plugi
 ## License
 
 This sample is provided for learning purposes. Add your preferred license text here if distributing.
+
+
+Add this if jacoco verification needs to capture both the issues
+
+```kotlin
+// Aggregate coverage verification across all subprojects
+val aggregateJacocoCoverageVerification = tasks.register("aggregateJacocoCoverageVerification", JacocoCoverageVerification::class) {
+    group = "Verification"
+    description = "Verifies aggregated code coverage across all subprojects"
+
+    // Ensure all tests ran and aggregate report is available
+    dependsOn(subprojects.map { it.tasks.withType<Test>() })
+    dependsOn(tasks.named("aggregateJacocoReport"))
+
+    // Collect execution data from all subprojects (both .exec and .ec formats)
+    val execFiles = subprojects.map { p ->
+        p.fileTree(p.layout.buildDirectory).matching {
+            include("jacoco/*.exec")
+            include("jacoco/*.ec")
+        }
+    }
+    executionData.from(execFiles)
+
+    // Collect compiled class outputs and sources from all Java projects
+    val classDirs = subprojects.mapNotNull { p ->
+        p.extensions.findByName("sourceSets") as? SourceSetContainer
+    }.map { container ->
+        container.getByName(SourceSet.MAIN_SOURCE_SET_NAME).output
+    }
+    classDirectories.from(classDirs)
+
+    val srcDirs = subprojects.mapNotNull { p ->
+        p.extensions.findByName("sourceSets") as? SourceSetContainer
+    }.flatMap { container ->
+        container.getByName(SourceSet.MAIN_SOURCE_SET_NAME).allSource.srcDirs
+    }
+    sourceDirectories.from(srcDirs)
+
+    violationRules {
+        rule {
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.80".toBigDecimal()
+            }
+        }
+        rule {
+            limit {
+                counter = "BRANCH"
+                value = "COVEREDRATIO"
+                minimum = "0.80".toBigDecimal()
+            }
+        }
+    }
+}
+
+```

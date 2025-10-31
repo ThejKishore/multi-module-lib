@@ -2,6 +2,8 @@ plugins{
     `java-library`
     id("org.springframework.boot")
     id("io.spring.dependency-management")
+    jacoco
+    id("com.palantir.baseline-checkstyle")
 }
 
 repositories {
@@ -31,6 +33,10 @@ tasks.withType<Test>().configureEach {
 }
 
 
-//    // Disable Spring Boot executable jar for library modules; keep plain jar
-tasks.named("bootJar") { enabled = false }
-tasks.named("jar") { enabled = true }
+//  Disable Spring Boot executable jar for library modules; keep plain jar
+tasks.named("bootJar") {
+    enabled = false
+}
+tasks.named("jar") {
+    enabled = true
+}

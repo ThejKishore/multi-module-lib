@@ -7,6 +7,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -19,6 +21,7 @@ import static org.mockito.Mockito.*;
 
 class DepartmentServiceTest {
 
+    private static final Logger log = LoggerFactory.getLogger(DepartmentServiceTest.class);
     @Mock
     private DepartmentRepository repository;
 
@@ -39,7 +42,9 @@ class DepartmentServiceTest {
             var idField = Department.class.getDeclaredField("id");
             idField.setAccessible(true);
             idField.set(saved, 1L);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            log.error("Failed to set id field", ignored);
+        }
 
         when(repository.save(any(Department.class))).thenReturn(saved);
 
@@ -58,7 +63,9 @@ class DepartmentServiceTest {
             var idField = Department.class.getDeclaredField("id");
             idField.setAccessible(true);
             idField.set(existing, 10L);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            log.error("Failed to set id field", ignored);
+        }
         when(repository.findById(10L)).thenReturn(Optional.of(existing));
         when(repository.save(any(Department.class))).thenAnswer(i -> i.getArgument(0));
 

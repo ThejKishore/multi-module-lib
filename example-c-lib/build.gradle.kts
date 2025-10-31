@@ -1,8 +1,9 @@
 plugins{
     java
     id("spring-boot-library")
+    id("sonar")
 }
 
 dependencies {
-    add("implementation", project(":example-lib"))
+    implementation(project(":example-lib"))
 }
