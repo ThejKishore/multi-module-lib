@@ -42,8 +42,8 @@ class DepartmentServiceTest {
             var idField = Department.class.getDeclaredField("id");
             idField.setAccessible(true);
             idField.set(saved, 1L);
-        } catch (Exception ignored) {
-            log.error("Failed to set id field", ignored);
+        } catch (Exception e) {
+            log.error("Failed to set id field", e);
         }
 
         when(repository.save(any(Department.class))).thenReturn(saved);

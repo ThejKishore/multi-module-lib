@@ -36,15 +36,17 @@ tasks.withType<Test>().configureEach {
 }
 
 
-//Sonar Check locally
+// Sonar Check locally
 // Aggregate SonarLint across all modules (root + subprojects)
 tasks.register("sonarlintAll") {}
 
 gradle.projectsEvaluated {
     tasks.named("sonarlintAll") {
-        // After all projects are evaluated, wire dependencies to existing SonarLint tasks
+        // After all projects are evaluated, wire dependencies to all SonarLint tasks, excluding this aggregate
         val allProjects = listOf(project) + subprojects
-        val sonarlintTasks = allProjects.mapNotNull { p -> p.tasks.findByName("sonarlint") }
+        val sonarlintTasks = allProjects.flatMap { p ->
+            p.tasks.matching { it.name.startsWith("sonarlint") && it.name != "sonarlintAll" }.toList()
+        }.toSet()
         dependsOn(sonarlintTasks)
     }
 }

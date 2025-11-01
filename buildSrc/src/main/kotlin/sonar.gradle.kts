@@ -5,10 +5,11 @@ plugins{
 // Ensure SonarLint runs as part of the standard verification lifecycle
 // Defer wiring until a 'check' task is available (added by 'base' / 'java' plugins)
 pluginManager.withPlugin("base") {
-    // Only wire dependency if SonarLint task exists in this project
+    // Only wire dependency if SonarLint tasks exist in this project
     val wire: () -> Unit = {
         tasks.named("check").configure {
-            tasks.findByName("sonarlint")?.let { dependsOn(it) }
+            // Depend on all SonarLint tasks (e.g., sonarlint, sonarlintMain, sonarlintTest, etc.)
+            tasks.matching { it.name.startsWith("sonarlint") }.forEach { dependsOn(it) }
         }
     }
     // If sonarlint plugin is already applied, wire immediately; otherwise wait for it
