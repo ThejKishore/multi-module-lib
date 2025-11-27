@@ -15,14 +15,19 @@ repositories {
     mavenLocal()
 }
 
+extra["springCloudVersion"] = "2025.1.0"
 
 dependencies {
-    implementation(libs.findLibrary("spring-boot-web").get())
-    implementation(libs.findLibrary("spring-boot-data-jpa").get())
-    implementation(libs.findLibrary("spring-boot-validation").get())
+    implementation(libs.findBundle("core-spring-boot").get())
     runtimeOnly(libs.findLibrary("h2").get())
-    testImplementation(libs.findLibrary("spring-boot-test").get())
-    testRuntimeOnly(libs.findLibrary("junit-launcher").get())
+    testImplementation(libs.findBundle("core-testing").get())
+    testRuntimeOnly(libs.findLibrary("h2").get())
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
 }
 
 java {

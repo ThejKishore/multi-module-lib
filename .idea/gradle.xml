@@ -21,7 +21,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/buildSrc" />
-            <option value="$PROJECT_DIR$/example-b-lib" />
             <option value="$PROJECT_DIR$/example-c-lib" />
             <option value="$PROJECT_DIR$/example-lib" />
           </set>

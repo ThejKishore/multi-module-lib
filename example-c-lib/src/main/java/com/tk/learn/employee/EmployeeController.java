@@ -1,7 +1,11 @@
 package com.tk.learn.employee;
 
-import com.tk.learn.model.Employee;
-import jakarta.validation.Valid;
+import am.ik.yavi.core.ConstraintViolations;
+import com.tk.learn.model.dao.Employee;
+import com.tk.learn.model.dto.EmployeeReq;
+import com.tk.learn.model.dto.EmployeeResp;
+import com.tk.learn.model.exceptions.InValidObjectException;
+import com.tk.learn.model.mapper.EmployeeMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,27 +24,43 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<Employee> create(@Valid @RequestBody Employee employee,
-                                           @RequestParam(value = "departmentId", required = false) Long departmentId) {
-        Employee created = service.create(employee, departmentId);
-        return ResponseEntity.created(URI.create("/api/employees/" + created.getId())).body(created);
+    public ResponseEntity<EmployeeResp> create(@RequestBody EmployeeReq employee) {
+        ConstraintViolations violations = EmployeeReq.employeeValidator.validate(employee);
+        if(!violations.isValid()){
+            throw new InValidObjectException(violations.details());
+        }
+        Employee employee1 = EmployeeMapper.toEmployee(employee);
+
+        Employee created = service.create(employee1);
+        EmployeeResp resp = EmployeeMapper.toEmployeeResp(created);
+        return ResponseEntity.created(URI.create("/api/employees/" + created.getId())).body(resp);
     }
 
     @GetMapping("/{id}")
-    public Employee get(@PathVariable Long id) {
-        return service.get(id);
+    public EmployeeResp get(@PathVariable Long id) {
+        Employee employee = service.get(id);
+        return EmployeeMapper.toEmployeeResp(employee);
     }
 
     @GetMapping
-    public List<Employee> list() {
-        return service.list();
+    public List<EmployeeResp> list() {
+        return service.list().stream().map(EmployeeMapper::toEmployeeResp).toList();
     }
 
     @PutMapping("/{id}")
-    public Employee update(@PathVariable Long id,
-                           @Valid @RequestBody Employee employee,
-                           @RequestParam(value = "departmentId", required = false) Long departmentId) {
-        return service.update(id, employee, departmentId);
+    public ResponseEntity<EmployeeResp> update(@PathVariable Long id, @RequestBody EmployeeReq employee) {
+        ConstraintViolations violations = EmployeeReq.employeeValidator.validate(employee);
+        if(!violations.isValid()){
+          throw new InValidObjectException(violations.details());
+        }
+        Employee employee1 = EmployeeMapper.toEmployee(employee);
+        Employee employee2 = service.get(id);
+        employee2.setFirstName(employee1.getFirstName());
+        employee2.setLastName(employee1.getLastName());
+        employee2.setEmail(employee1.getEmail());
+        Employee updateEmployee = service.update(id, employee2);
+        EmployeeResp resp = EmployeeMapper.toEmployeeResp(updateEmployee);
+        return ResponseEntity.ok(resp);
     }
 
     @DeleteMapping("/{id}")

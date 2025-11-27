@@ -1,5 +1,5 @@
 plugins{
-    `java-library`
+    id("spring-boot-library")
     id("sonar")
 }
 
@@ -9,11 +9,12 @@ repositories {
 }
 
 dependencies {
-    // Domain model annotations
-    api("jakarta.persistence:jakarta.persistence-api:3.1.0")
-    api("jakarta.validation:jakarta.validation-api:3.0.2")
-    // JSON annotations for controlling serialization
-    api("com.fasterxml.jackson.core:jackson-annotations:2.17.2")
+    // Lombok
+    compileOnly(libs.spring.boot.webmvc)
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
+    // https://mvnrepository.com/artifact/am.ik.yavi/yavi
+    implementation("am.ik.yavi:yavi:0.16.0")
 
     // Testing
     testImplementation("nl.jqno.equalsverifier:equalsverifier:4.2.1")

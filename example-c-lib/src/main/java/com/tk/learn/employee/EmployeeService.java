@@ -1,10 +1,8 @@
 package com.tk.learn.employee;
 
-import com.tk.learn.model.Department;
-import com.tk.learn.model.Employee;
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.tk.learn.model.dao.Employee;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -13,35 +11,23 @@ import java.util.NoSuchElementException;
 public class EmployeeService {
 
     private final EmployeeRepository repository;
-    private final EntityManager entityManager;
 
-    public EmployeeService(EmployeeRepository repository, EntityManager entityManager) {
+    public EmployeeService(EmployeeRepository repository) {
         this.repository = repository;
-        this.entityManager = entityManager;
     }
 
     @Transactional
-    public Employee create(Employee employee, Long departmentId) {
-        if (departmentId != null) {
-            Department ref = entityManager.getReference(Department.class, departmentId);
-            employee.setDepartment(ref);
-        } else {
-            employee.setDepartment(null);
-        }
+    public Employee create(Employee employee) {
         return repository.save(employee);
     }
 
     @Transactional
-    public Employee update(Long id, Employee updated, Long departmentId) {
+    public Employee update(Long id, Employee updated) {
         Employee existing = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Employee not found: " + id));
         existing.setFirstName(updated.getFirstName());
         existing.setLastName(updated.getLastName());
         existing.setEmail(updated.getEmail());
-        if (departmentId != null) {
-            Department ref = entityManager.getReference(Department.class, departmentId);
-            existing.setDepartment(ref);
-        }
         return repository.save(existing);
     }
 

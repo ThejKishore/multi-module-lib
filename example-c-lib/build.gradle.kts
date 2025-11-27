@@ -6,4 +6,5 @@ plugins{
 
 dependencies {
     implementation(project(":example-lib"))
+    implementation("am.ik.yavi:yavi:0.16.0")
 }

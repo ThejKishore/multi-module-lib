@@ -203,3 +203,9 @@ val aggregateJacocoCoverageVerification = tasks.register("aggregateJacocoCoverag
 }
 
 ```
+
+### Copilot prompt learnings
+
+[co-pilot-learning-site](https://dev.to/anchildress1/github-copilot-everything-you-wanted-to-know-about-reusable-and-experimental-prompts-part-1-iff)
+
+[co-pilot-reference-project](https://github.com/anchildress1/awesome-github-copilot/tree/main)
