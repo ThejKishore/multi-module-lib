@@ -1,0 +1,69 @@
+meta {
+  name: create-employee
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://127.0.0.1:8080/api/employees
+  body: json
+  auth: inherit
+}
+
+headers {
+  X-Request-User: {
+    "compact_token_example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJleGFtcGxlLWF1dGgiLCJzdWIiOiJ1c2VyLTEyMyIsImF1ZCI6ImV4YW1wbGUtc2VydmljZSIsImlhdCI6MTY5OTAwMDAwMCwiZXhwIjoxNjk5MDAzNjAwLCJzY29wZSI6InJlYWQgd3JpdGUiLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iXSwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsIm5hbWUiOiJBbGljZSBBcGkiLCJ0ZW5hbnQiOiJ0ZW5hbnQtMSIsImp0aSI6InRva2VuLWlkLTQ1NiJ9.<signature_placeholder>",
+    "decoded": {
+      "header": {
+        "alg": "HS256",
+        "typ": "JWT"
+      },
+      "payload": {
+        "iss": "example-auth",
+        "sub": "user-123",
+        "aud": "example-service",
+        "iat": 1699000000,
+        "exp": 1699003600,
+        "scope": "read write",
+        "roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "email": "alice@example.com",
+        "name": "Alice Api",
+        "tenant": "tenant-1",
+        "jti": "token-id-456"
+      }
+    },
+    "token_response_example": {
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJleGFtcGxlLWF1dGgiLCJzdWIiOiJ1c2VyLTEyMyIsImF1ZCI6ImV4YW1wbGUtc2VydmljZSIsImlhdCI6MTY5OTAwMDAwMCwiZXhwIjoxNjk5MDAzNjAwLCJzY29wZSI6InJlYWQgd3JpdGUiLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iXSwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsIm5hbWUiOiJBbGljZSBBcGkiLCJ0ZW5hbnQiOiJ0ZW5hbnQtMSIsImp0aSI6InRva2VuLWlkLTQ1NiJ9.<signature_placeholder>",
+      "token_type": "Bearer",
+      "expires_in": 3600,
+      "refresh_token": "def502009b...refresh-token-placeholder",
+      "scope": "read write",
+      "user": {
+        "id": "user-123",
+        "email": "alice@example.com",
+        "name": "Alice Api",
+        "roles": [
+          "USER",
+          "ADMIN"
+        ],
+        "tenant": "tenant-1"
+      }
+    }
+  }
+  
+}
+
+body:json {
+  {
+    "firstName": "Thej",
+    "lastName": "Karuneegar",
+    "email": "testrmial.com"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,3 +1,5 @@
+import utility.*
+
 plugins{
     java
     id("org.springframework.boot")
@@ -8,31 +10,29 @@ plugins{
     id("docker")
 }
 
-val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-
 repositories {
     mavenCentral()
     mavenLocal()
 }
 
-extra["springCloudVersion"] = "2025.1.0"
 
 dependencies {
-    implementation(libs.findBundle("core-spring-boot").get())
-    runtimeOnly(libs.findLibrary("h2").get())
-    testImplementation(libs.findBundle("core-testing").get())
-    testRuntimeOnly(libs.findLibrary("h2").get())
+    // Add each dependency from our arrays individually; Gradle cannot accept Array<String> directly
+    Bundle.core.forEach { implementation(it) }
+    runtimeOnly(Libs.h2)
+    Bundle.testing.forEach { testImplementation(it) }
+    testRuntimeOnly(Libs.h2)
 }
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+        mavenBom(Libs.cloudDependencies+Versions.springCloud)
     }
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(Versions.JDK_VERSION))
     }
 }
 

@@ -6,17 +6,22 @@ import com.tk.learn.model.dto.EmployeeReq;
 import com.tk.learn.model.dto.EmployeeResp;
 import com.tk.learn.model.exceptions.InValidObjectException;
 import com.tk.learn.model.mapper.EmployeeMapper;
+import com.tk.learn.web.context.RequestContextHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
+    private static final Logger log = LoggerFactory.getLogger(EmployeeController.class);
     private final EmployeeService service;
 
     public EmployeeController(EmployeeService service) {
@@ -26,6 +31,8 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeResp> create(@RequestBody EmployeeReq employee) {
         ConstraintViolations violations = EmployeeReq.employeeValidator.validate(employee);
+        Map<String, Object> userJson = RequestContextHolder.getContext();
+        log.atDebug().setMessage("User token found {} ").addArgument(userJson).log();
         if(!violations.isValid()){
             throw new InValidObjectException(violations.details());
         }

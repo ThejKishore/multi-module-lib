@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "multimodule-tests-employee",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

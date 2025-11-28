@@ -20,3 +20,12 @@ spring:
 server:
   port: 8080
 
+request:
+  context:
+    header: X-Request-User
+
+logging:
+  level:
+    root: INFO
+    com.tk.learn.employee: ERROR
+    com.tk.learn.employee.EmployeeController: DEBUG
