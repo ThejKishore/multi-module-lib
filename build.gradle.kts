@@ -1,3 +1,5 @@
+import utility.Libs
+
 plugins{
     id("spring-boot-application")
     id("docker")

@@ -209,3 +209,7 @@ val aggregateJacocoCoverageVerification = tasks.register("aggregateJacocoCoverag
 [co-pilot-learning-site](https://dev.to/anchildress1/github-copilot-everything-you-wanted-to-know-about-reusable-and-experimental-prompts-part-1-iff)
 
 [co-pilot-reference-project](https://github.com/anchildress1/awesome-github-copilot/tree/main)
+
+```shell
+./gradlew --no-daemon clean :bootJar -x test
+```

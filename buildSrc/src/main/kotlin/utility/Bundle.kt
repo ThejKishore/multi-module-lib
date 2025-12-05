@@ -9,7 +9,10 @@ object  Bundle {
         Libs.bootStarterJdbc,
         Libs.micrometerBridgeBrave,
         Libs.cloudStarter,
-        Libs.cloudResilience4j
+        Libs.cloudResilience4j,
+        Libs.openApiMvc,
+        Libs.openApiWebUi,
+
     )
 
     //core test bundle

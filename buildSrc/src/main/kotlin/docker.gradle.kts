@@ -13,9 +13,9 @@ abstract class GenerateDockerfile : DefaultTask() {
     @get:PathSensitive(PathSensitivity.NONE)
     val templateFile: File = run {
         // Load resource from buildSrc classpath to a temp file to participate in up-to-date checks
-        val res = javaClass.classLoader.getResource("Dockerfile.jlink")
+        val res = javaClass.classLoader.getResource("Dockerfile.jre")
             ?: throw IllegalStateException("Resource Dockerfile.jlink not found in buildSrc resources")
-        val tmp = project.layout.buildDirectory.file("tmp/docker/Dockerfile.jlink").get().asFile
+        val tmp = project.layout.buildDirectory.file("tmp/docker/Dockerfile.jre").get().asFile
         tmp.parentFile.mkdirs()
         tmp.writeText(res.readText())
         tmp
@@ -55,7 +55,8 @@ abstract class GenerateDockerfile : DefaultTask() {
         if (outputFile.exists()) {
             val current = outputFile.readText()
             val wantFroms = listOf(
-                "FROM ${buildImg} AS build",
+                // We consider either legacy 'build' stage or the new 'jre-builder-deps' stage acceptable
+                "FROM ${buildImg} AS jre-builder-deps",
                 "FROM ${buildImg} AS jre-builder",
                 "FROM ${runImg} AS runtime-base"
             )
@@ -107,13 +108,28 @@ val generateDockerfile = tasks.register("generateDockerfile", GenerateDockerfile
 val dockerBuildImage = tasks.register<Exec>("dockerBuildImage") {
     group = "docker"
     description = "Builds Docker image using the generated Dockerfile"
+    // Ensure the host jar exists before building the image
+    dependsOn(":bootJar")
     dependsOn(generateDockerfile)
     dependsOn(validateDocker)
     workingDir = project.rootDir
     doFirst {
         val name = imageNameProp.get()
         val tag = imageTagProp.get()
-        commandLine(dockerExecutable.get(), "build", "-t", "$name:$tag", "-f", "Dockerfile", ".")
+        // Verify at least one jar exists; Dockerfile expects build/libs/*.jar from host
+        val libsDir = project.layout.projectDirectory.dir("build/libs").asFile
+        val jars = libsDir.listFiles { f -> f.isFile && f.name.endsWith(".jar") }?.toList() ?: emptyList()
+        if (jars.isEmpty()) {
+            throw GradleException("No JAR found under build/libs. Run ':bootJar' first or check the build.")
+        }
+        commandLine(
+            dockerExecutable.get(),
+            "build",
+            "--build-arg", "APP_JAR=build/libs/*.jar",
+            "-t", "$name:$tag",
+            "-f", "Dockerfile",
+            "."
+        )
     }
 }
 

@@ -1,9 +1,12 @@
 import utility.*
+import org.gradle.jvm.tasks.Jar
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins{
     java
     id("org.springframework.boot")
     id("io.spring.dependency-management")
+    id("org.graalvm.buildtools.native")
     jacoco
     id("consolidatedJacoco")
     id("com.palantir.baseline-checkstyle")
@@ -34,6 +37,16 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(Versions.JDK_VERSION))
     }
+}
+
+// Ensure we only produce the executable Spring Boot jar (disable plain jar)
+tasks.named<Jar>("jar") {
+    enabled = false
+}
+tasks.named<BootJar>("bootJar") {
+    // Produce an artifact named: <project-name>-<version>-boot.jar
+    archiveFileName.set("${project.name}-${project.version}-boot.jar")
+    enabled = true
 }
 
 tasks.withType<Test>().configureEach {

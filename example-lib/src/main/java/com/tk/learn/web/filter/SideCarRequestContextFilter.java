@@ -45,11 +45,12 @@ public class SideCarRequestContextFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader(headerName);
-        Base64.Decoder decoder = Base64.getDecoder();
-        header = new String(decoder.decode(header));
+
         try {
             if (StringUtils.hasText(header)) {
                 try {
+                    Base64.Decoder decoder = Base64.getDecoder();
+                    header = new String(decoder.decode(header));
                     Map<String, Object> ctx = objectMapper.readValue(header, MAP_TYPE);
                     RequestContextHolder.setContext(ctx);
                 } catch (JacksonException e) {

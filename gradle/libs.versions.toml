@@ -6,6 +6,7 @@ junit-platform = "1.10.2"
 sonarlint = "7.0.0-rc-4"
 freefair-aggregate-jacoco = "9.0.0"
 palantir = "6.66.0"
+springdoc-openapi-version = "2.8.14"
 
 [libraries]
 spring-boot-micrometer-tracing = { module = "org.springframework.boot:spring-boot-micrometer-tracing"}
@@ -18,6 +19,10 @@ spring-boot-webmvc = { module = "org.springframework.boot:spring-boot-starter-we
 micrometer-bridge-brave = { module = "io.micrometer:micrometer-tracing-bridge-brave" }
 spring-cloud-starter = { module = "org.springframework.cloud:spring-cloud-starter"}
 spring-cloud-resilience4j = { module = "org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j" }
+
+
+springdoc-openapi-web-mvc = { module = "org.springdoc:springdoc-openapi-starter-webmvc-api", version.ref = "springdoc-openapi-version" }
+
 
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 h2 = { module = "com.h2database:h2" }
@@ -42,6 +47,7 @@ sonarlint-plugin= { module = "name.remal.sonarlint:name.remal.sonarlint.gradle.p
 freefair-aggregate-jacoco-plugin = { module = "io.freefair.aggregate-jacoco-report:io.freefair.aggregate-jacoco-report.gradle.plugin", version.ref = "freefair-aggregate-jacoco" }
 palantir-checkstyle-plugin = { module = "com.palantir.baseline-checkstyle:com.palantir.baseline-checkstyle.gradle.plugin" , version.ref="palantir"}
 palantir-idea-plugin = { module = "com.palantir.baseline-checkstyle:com.palantir.baseline-checkstyle.gradle.plugin" , version.ref="palantir"}
+graalVm-plugin = { module = "org.graalvm.buildtools:native-gradle-plugin" , version="0.11.3"}
 
 [bundles]
 core-spring-boot = [
@@ -52,7 +58,8 @@ core-spring-boot = [
     "spring-boot-webmvc",
     "micrometer-bridge-brave",
     "spring-cloud-starter",
-    "spring-cloud-resilience4j"
+    "spring-cloud-resilience4j",
+    "springdoc-openapi-web-mvc"
 ]
 core-testing = [
     "spring-boot-micrometer-tracing-test",

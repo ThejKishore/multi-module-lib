@@ -11,49 +11,7 @@ post {
 }
 
 headers {
-  X-Request-User: {
-    "compact_token_example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJleGFtcGxlLWF1dGgiLCJzdWIiOiJ1c2VyLTEyMyIsImF1ZCI6ImV4YW1wbGUtc2VydmljZSIsImlhdCI6MTY5OTAwMDAwMCwiZXhwIjoxNjk5MDAzNjAwLCJzY29wZSI6InJlYWQgd3JpdGUiLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iXSwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsIm5hbWUiOiJBbGljZSBBcGkiLCJ0ZW5hbnQiOiJ0ZW5hbnQtMSIsImp0aSI6InRva2VuLWlkLTQ1NiJ9.<signature_placeholder>",
-    "decoded": {
-      "header": {
-        "alg": "HS256",
-        "typ": "JWT"
-      },
-      "payload": {
-        "iss": "example-auth",
-        "sub": "user-123",
-        "aud": "example-service",
-        "iat": 1699000000,
-        "exp": 1699003600,
-        "scope": "read write",
-        "roles": [
-          "USER",
-          "ADMIN"
-        ],
-        "email": "alice@example.com",
-        "name": "Alice Api",
-        "tenant": "tenant-1",
-        "jti": "token-id-456"
-      }
-    },
-    "token_response_example": {
-      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJleGFtcGxlLWF1dGgiLCJzdWIiOiJ1c2VyLTEyMyIsImF1ZCI6ImV4YW1wbGUtc2VydmljZSIsImlhdCI6MTY5OTAwMDAwMCwiZXhwIjoxNjk5MDAzNjAwLCJzY29wZSI6InJlYWQgd3JpdGUiLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iXSwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsIm5hbWUiOiJBbGljZSBBcGkiLCJ0ZW5hbnQiOiJ0ZW5hbnQtMSIsImp0aSI6InRva2VuLWlkLTQ1NiJ9.<signature_placeholder>",
-      "token_type": "Bearer",
-      "expires_in": 3600,
-      "refresh_token": "def502009b...refresh-token-placeholder",
-      "scope": "read write",
-      "user": {
-        "id": "user-123",
-        "email": "alice@example.com",
-        "name": "Alice Api",
-        "roles": [
-          "USER",
-          "ADMIN"
-        ],
-        "tenant": "tenant-1"
-      }
-    }
-  }
-  
+  X-Request-User: ewogICJkZWNvZGVkIjogewogICAgImhlYWRlciI6IHsKICAgICAgImFsZyI6ICJIUzI1NiIsCiAgICAgICJ0eXAiOiAiSldUIgogICAgfSwKICAgICJwYXlsb2FkIjogewogICAgICAiaXNzIjogImV4YW1wbGUtYXV0aCIsCiAgICAgICJzdWIiOiAidXNlci0xMjMiLAogICAgICAiYXVkIjogImV4YW1wbGUtc2VydmljZSIsCiAgICAgICJpYXQiOiAxNjk5MDAwMDAwLAogICAgICAiZXhwIjogMTY5OTAwMzYwMCwKICAgICAgInNjb3BlIjogInJlYWQgd3JpdGUiLAogICAgICAicm9sZXMiOiBbCiAgICAgICAgIlVTRVIiLAogICAgICAgICJBRE1JTiIKICAgICAgXSwKICAgICAgImVtYWlsIjogImFsaWNlQGV4YW1wbGUuY29tIiwKICAgICAgIm5hbWUiOiAiQWxpY2UgQXBpIiwKICAgICAgInRlbmFudCI6ICJ0ZW5hbnQtMSIsCiAgICAgICJqdGkiOiAidG9rZW4taWQtNDU2IgogICAgfQogIH0sCiAgInRva2VuX3Jlc3BvbnNlX2V4YW1wbGUiOiB7CiAgICAidG9rZW5fdHlwZSI6ICJCZWFyZXIiLAogICAgImV4cGlyZXNfaW4iOiAzNjAwLAogICAgInJlZnJlc2hfdG9rZW4iOiAiZGVmNTAyMDA5Yi4uLnJlZnJlc2gtdG9rZW4tcGxhY2Vob2xkZXIiLAogICAgInNjb3BlIjogInJlYWQgd3JpdGUiLAogICAgInVzZXIiOiB7CiAgICAgICJpZCI6ICJ1c2VyLTEyMyIsCiAgICAgICJlbWFpbCI6ICJhbGljZUBleGFtcGxlLmNvbSIsCiAgICAgICJuYW1lIjogIkFsaWNlIEFwaSIsCiAgICAgICJyb2xlcyI6IFsKICAgICAgICAiVVNFUiIsCiAgICAgICAgIkFETUlOIgogICAgICBdLAogICAgICAidGVuYW50IjogInRlbmFudC0xIgogICAgfQogIH0KfQo=
 }
 
 body:json {

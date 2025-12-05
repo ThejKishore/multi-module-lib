@@ -1,97 +1,61 @@
-# Stage 1: Build the application JAR using Gradle
-FROM gradle:8.12.0-jdk-21-and-23-graal AS builder
-LABEL stage="builder"
+## Reference Dockerfile used for internal tooling/tests
+## This version mirrors the production Dockerfile: it expects a host-built JAR
+## and constructs a minimal custom JRE using jdeps + jlink.
 
-# Set the working directory inside the container
-WORKDIR /home/gradle/project
+# -----------------------------
+# Stage 1: Obtain dependency information from the host-built JAR
+# -----------------------------
+FROM eclipse-temurin:21-jdk-jammy AS jre-builder-deps
+WORKDIR /work
 
-# Copy only the build configuration to avoid invalidating the cache unnecessarily
-COPY build.gradle settings.gradle ./
+# Path to the host-built jar relative to the build context
+ARG APP_JAR=build/libs/*.jar
 
-# Copy the Gradle wrapper files if present
-COPY gradlew ./
-COPY gradle/ ./gradle/
+# Copy application jar
+COPY ${APP_JAR} /work/app.jar
 
-# Download Gradle dependencies to cache builds efficiently
-RUN gradle dependencies --no-daemon
+# Compute module dependencies used by the app
+RUN jdeps \
+      --multi-release 21 \
+      --print-module-deps \
+      --ignore-missing-deps \
+      /work/app.jar > /work/deps.txt
 
-# Copy the rest of the application source code
-COPY src ./src
+# -----------------------------
+# Stage 2: Build the custom JRE with jlink
+# -----------------------------
+FROM eclipse-temurin:21-jdk-jammy AS jre-builder
+WORKDIR /work
 
-# Build the application JAR
-RUN gradle bootJar --no-daemon
+COPY --from=jre-builder-deps /work/app.jar /work/app.jar
+COPY --from=jre-builder-deps /work/deps.txt /work/deps.txt
 
-# Stage 2: Obtain dependency information for custom JRE creation
-FROM amazoncorretto:21-alpine as deps
-LABEL stage="deps"
+# Known extra modules required by Spring Boot/Tomcat on a minimal JRE
+RUN echo "jdk.crypto.ec,java.desktop,java.management" > /work/extras.txt \
+ && MODS=$(cat /work/deps.txt) \
+ && EXTRAS=$(tr -d '\n' < /work/extras.txt) \
+ && jlink \
+        --add-modules ${MODS},${EXTRAS} \
+        --no-header-files \
+        --no-man-pages \
+        --strip-debug \
+        --compress=2 \
+        --output /jre
 
-# Copy the application JAR from the builder stage
-COPY --from=builder /home/gradle/project/build/libs/*.jar /app/app.jar
-
-# Extract and analyze dependencies
-RUN mkdir /app/unpacked && \
-    cd /app/unpacked && \
-    unzip ../app.jar && \
-    cd .. && \
-    # Generate list of required modules
-    $JAVA_HOME/bin/jdeps \
-    --ignore-missing-deps \
-    --print-module-deps \
-    -q \
-    --recursive \
-    --multi-release 21 \
-    --class-path="./unpacked/BOOT-INF/lib/*" \
-    --module-path="./unpacked/BOOT-INF/lib/*" \
-    ./app.jar > /deps.info
-
-# Stage 3: Build a custom JRE
-FROM amazoncorretto:21-alpine as custom-jre
-LABEL stage="custom-jre"
-
-RUN apk add --no-cache binutils
-
-# Copy the dependency information generated in the "deps" stage
-COPY --from=deps /deps.info /deps.info
-
-# Create the custom JRE with only necessary modules
-RUN $JAVA_HOME/bin/jlink \
-    --verbose \
-    --add-modules $(cat /deps.info) \
-    --strip-debug \
-    --no-man-pages \
-    --no-header-files \
-    --compress=2 \
-    --output /customjre
-
-# Stage 4: Create the final minimal image
-FROM alpine:latest
-LABEL stage="final"
-
-# Set the environment variables for Java
-ENV JAVA_HOME=/jre
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
-
-# Copy the custom JRE
-COPY --from=custom-jre /customjre $JAVA_HOME
-
-# Create a non-root user for better security
-ARG APPLICATION_USER=appuser
-RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER
-
-# Create the app directory and set ownership to the non-root user
-RUN mkdir /app && chown -R $APPLICATION_USER /app
-
-# Switch to the non-root user
-USER 1000
-
-# Copy the application JAR to the image
-COPY --from=builder /home/gradle/project/build/libs/*.jar /app/app.jar
-
-# Set the working directory inside the container
+# -----------------------------
+# Stage 3: Minimal runtime image (distroless, non-root)
+# -----------------------------
+FROM gcr.io/distroless/base-debian12:nonroot
+ENV TZ=UTC
 WORKDIR /app
 
-# Expose the application port
-EXPOSE 8080
+COPY --from=jre-builder /jre /opt/jre
+ENV PATH=/opt/jre/bin:$PATH
 
-# Define the entry point for running the Spring Boot application
-ENTRYPOINT [ "/jre/bin/java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.jar" ]
+ARG APP_JAR=build/libs/*.jar
+COPY ${APP_JAR} /app/app.jar
+
+EXPOSE 8080
+USER nonroot
+
+ENTRYPOINT ["java","-XX:MaxRAMPercentage=75.0","-jar","/app/app.jar"]

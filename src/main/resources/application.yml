@@ -29,3 +29,10 @@ logging:
     root: INFO
     com.tk.learn.employee: ERROR
     com.tk.learn.employee.EmployeeController: DEBUG
+
+springdoc:
+  show-actuator: true
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

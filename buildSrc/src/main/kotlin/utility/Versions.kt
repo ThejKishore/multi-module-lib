@@ -15,4 +15,5 @@ object Versions {
     const val freefairAggregateJacoco = "9.0.0"
     const val JDK_VERSION = 21
     const val yavi = "0.16.0"
+    const val openApiVersion = "3.0.0"
 }

@@ -38,5 +38,9 @@ object Libs {
 
     const val yavi = "am.ik.yavi:yavi:"+Versions.yavi
 
+    const val openApiMvc=  "org.springdoc:springdoc-openapi-starter-webmvc-api:"+Versions.openApiVersion
+    const val openApiWebUi=  "org.springdoc:springdoc-openapi-starter-webmvc-ui:"+Versions.openApiVersion
 
+    // Utility library used by Spring AOP/CGLIB to instantiate proxies without invoking constructors
+    const val objenesis = "org.objenesis:objenesis"
 }
