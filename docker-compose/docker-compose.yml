@@ -1,6 +1,5 @@
 services:
   multiModule:
-    profiles: ["prod"]
     image: multi-module:latest
     ports:
       - "8080:8080"

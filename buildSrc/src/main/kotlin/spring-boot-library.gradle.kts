@@ -17,7 +17,7 @@ dependencies {
     // Add each dependency from our arrays individually; Gradle cannot accept Array<String> directly
     Bundle.core.forEach { implementation(it) }
     runtimeOnly(Libs.h2)
-    Bundle.testing.forEach { testImplementation(it) }
+    // Keep test dependencies minimal; individual modules declare their own specific test needs
     testRuntimeOnly(Libs.h2)
 }
 
