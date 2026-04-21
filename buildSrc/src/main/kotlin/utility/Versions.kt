@@ -11,6 +11,7 @@ object Versions {
     const val junitJupiterVersion = "5.10.2"
     const val lombok = "1.18.34"
     const val sonarlint = "7.0.0-rc-4"
+    const val sonarqube = "6.0.1.5171"
     const val palantir = "6.66.0"
     const val freefairAggregateJacoco = "9.0.0"
     const val JDK_VERSION = 21

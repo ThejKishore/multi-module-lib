@@ -1,0 +1,19 @@
+# JWT Authentication Filter Configuration for Azure Profile
+jwt:
+  auth:
+    filter:
+      enabled: false
+  # JWK Set URI - Used to fetch public keys for JWT signature verification
+  # For Azure AD: https://login.microsoftonline.com/{tenant}/discovery/v2.0/keys
+  jwk-set-uri: ${JWT_JWK_SET_URI:#{null}}
+  jwk-cache-ttl-minutes: 60
+
+  # Optional: Configure token validation
+  issuer: ${JWT_ISSUER:#{null}}
+  audience: ${JWT_AUDIENCE:#{null}}
+
+  header-name: Authorization
+  token-prefix: "Bearer "
+  cache:
+    ttl-seconds: 3600
+

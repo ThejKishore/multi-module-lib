@@ -9,6 +9,7 @@ plugins{
     id("org.graalvm.buildtools.native")
     jacoco
     id("consolidatedJacoco")
+    id("sonar")
     id("com.palantir.baseline-checkstyle")
     id("docker")
 }

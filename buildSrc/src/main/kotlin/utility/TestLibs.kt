@@ -24,5 +24,8 @@ object TestLibs {
     const val equalsVerifier = "nl.jqno.equalsverifier:equalsverifier:" + Versions.equalsVerifer
     const val junitJupiterApi = "org.junit.jupiter:junit-jupiter-api:"+Versions.junitJupiterVersion
     const val junitJupiterEngine = "org.junit.jupiter:junit-jupiter-engine:"+Versions.junitJupiterVersion
+    const val mockito = "org.mockito:mockito-core"
+    const val mockitoJunit = "org.mockito:mockito-junit-jupiter"
+    const val springTest = "org.springframework.boot:spring-boot-starter-test"
 
 }

@@ -1,0 +1,101 @@
+{
+  "description": "JWT Authentication Filter Example - User Access JWT",
+  "version": "1.0.0",
+  "example_jwt_payload": {
+    "header": {
+      "alg": "HS256",
+      "typ": "JWT"
+    },
+    "payload": {
+      "userId": "user-12345",
+      "email": "john.doe@company.com",
+      "username": "john.doe",
+      "sessionId": "session-abc-def-ghi-123456",
+      "roles": [
+        "ADMIN",
+        "USER",
+        "MANAGER"
+      ],
+      "permissions": [
+        "READ",
+        "WRITE",
+        "DELETE",
+        "APPROVE"
+      ],
+      "issuedAt": 1713607200000,
+      "expiresAt": 1713693600000
+    },
+    "signature": "base64encodedSignature"
+  },
+  "example_bearer_token": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLTEyMzQ1IiwiZW1haWwiOiJqb2huLmRvZUBjb21wYW55LmNvbSIsInVzZXJuYW1lIjoiam9obi5kb2UiLCJzZXNzaW9uSWQiOiJzZXNzaW9uLWFiYy1kZWYtZ2hpLTEyMzQ1NiIsInJvbGVzIjpbIkFETUluIiwiVVNFUiIsIk1BTkFHRVIiXSwicGVybWlzc2lvbnMiOlsiUkVBRCIsIldSSVRFIiwiREVMRVRFIiwiQVBQUk9WRSJdLCJpc3N1ZWRBdCI6MTcxMzYwNzIwMDAwMCwiZXhwaXJlc0F0IjoxNzEzNjkzNjAwMDAwfQ.signature",
+  "http_request_examples": {
+    "get_current_user": {
+      "method": "GET",
+      "endpoint": "/api/users/me",
+      "headers": {
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLTEyMzQ1IiwiZW1haWwiOiJqb2huLmRvZUBjb21wYW55LmNvbSIsInVzZXJuYW1lIjoiam9obi5kb2UiLCJzZXNzaW9uSWQiOiJzZXNzaW9uLWFiYy1kZWYtZ2hpLTEyMzQ1NiIsInJvbGVzIjpbIkFETUluIiwiVVNFUiIsIk1BTkFHRVIiXSwicGVybWlzc2lvbnMiOlsiUkVBRCIsIldSSVRFIiwiREVMRVRFIiwiQVBQUk9WRSJdLCJpc3N1ZWRBdCI6MTcxMzYwNzIwMDAwMCwiZXhwaXJlc0F0IjoxNzEzNjkzNjAwMDAwfQ.signature",
+        "Content-Type": "application/json"
+      },
+      "response": 200,
+      "response_body": {
+        "userId": "user-12345",
+        "email": "john.doe@company.com",
+        "username": "john.doe",
+        "sessionId": "session-abc-def-ghi-123456",
+        "roles": [
+          "ADMIN",
+          "USER",
+          "MANAGER"
+        ],
+        "permissions": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "APPROVE"
+        ],
+        "issuedAt": 1713607200000,
+        "expiresAt": 1713693600000
+      }
+    },
+    "invalid_token": {
+      "method": "GET",
+      "endpoint": "/api/users/me",
+      "headers": {
+        "Authorization": "Bearer invalid.token.here",
+        "Content-Type": "application/json"
+      },
+      "response": 401,
+      "response_body": {
+        "error": "Unauthorized - Invalid or missing JWT token"
+      }
+    },
+    "missing_token": {
+      "method": "GET",
+      "endpoint": "/api/users/me",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "response": 401,
+      "response_body": {
+        "error": "Unauthorized - Invalid or missing JWT token"
+      }
+    }
+  },
+  "curl_examples": {
+    "valid_token": "curl -X GET http://localhost:8080/api/users/me -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' -H 'Content-Type: application/json'",
+    "invalid_token": "curl -X GET http://localhost:8080/api/users/me -H 'Authorization: Bearer invalid' -H 'Content-Type: application/json'",
+    "no_token": "curl -X GET http://localhost:8080/api/users/me -H 'Content-Type: application/json'"
+  },
+  "jwt_decoder_sites": [
+    "https://jwt.io",
+    "https://jwt.ms"
+  ],
+  "notes": {
+    "token_format": "3 parts separated by dots: header.payload.signature",
+    "header_format": "Authorization: Bearer <token>",
+    "expiration_validation": "Check expiresAt timestamp against current time (in milliseconds)",
+    "cache_ttl": "Default 3600 seconds (1 hour), configurable via jwt.cache.ttl-seconds",
+    "profiles": "Filter enabled for 'pcf' profile, disabled for 'azure' profile"
+  }
+}
+

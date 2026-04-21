@@ -61,4 +61,8 @@ tasks.named("check") {
     dependsOn(tasks.named("sonarlintAll"))
     dependsOn(tasks.named("aggregateTestReport"))
     dependsOn(tasks.named("jacocoTestCoverageVerification"))
+    // Upload consolidated Jacoco report to SonarQube — only wired when org.sonarqube is applied
+    pluginManager.withPlugin("org.sonarqube") {
+        dependsOn(tasks.named("sonar"))
+    }
 }

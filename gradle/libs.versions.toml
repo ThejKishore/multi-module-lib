@@ -4,6 +4,7 @@ spring-dependency-management = "1.1.7"
 lombok = "1.18.34"
 junit-platform = "1.10.2"
 sonarlint = "7.0.0-rc-4"
+sonarqube = "6.0.1.5171"
 freefair-aggregate-jacoco = "9.0.0"
 palantir = "6.66.0"
 springdoc-openapi-version = "2.8.14"
@@ -44,6 +45,7 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 spring-boot-plugin= { module ="org.springframework.boot:org.springframework.boot.gradle.plugin" ,version.ref = "spring-boot-version" }
 spring-dependency-plugin= { module ="io.spring.dependency-management:io.spring.dependency-management.gradle.plugin" ,version.ref ="spring-dependency-management" }
 sonarlint-plugin= { module = "name.remal.sonarlint:name.remal.sonarlint.gradle.plugin", version.ref = "sonarlint" }
+sonarqube-plugin = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version.ref = "sonarqube" }
 freefair-aggregate-jacoco-plugin = { module = "io.freefair.aggregate-jacoco-report:io.freefair.aggregate-jacoco-report.gradle.plugin", version.ref = "freefair-aggregate-jacoco" }
 palantir-checkstyle-plugin = { module = "com.palantir.baseline-checkstyle:com.palantir.baseline-checkstyle.gradle.plugin" , version.ref="palantir"}
 palantir-idea-plugin = { module = "com.palantir.baseline-checkstyle:com.palantir.baseline-checkstyle.gradle.plugin" , version.ref="palantir"}
@@ -72,3 +74,4 @@ core-testing = [
 [plugins]
 spring-boot = { id = "org.springframework.boot" , version.ref = "spring-boot-version"}
 spring-dependency = { id ="io.spring.dependency-management" , version.ref ="spring-dependency-management" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }

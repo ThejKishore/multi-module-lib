@@ -1,0 +1,19 @@
+# JWT Authentication Filter Configuration for PCF
+jwt:
+  auth:
+    filter:
+      enabled: true
+  # JWK Set URI - Used to fetch public keys for JWT signature verification
+  # Example: https://your-oauth-provider.com/.well-known/jwks.json
+  jwk-set-uri: ${JWT_JWK_SET_URI:#{null}}
+  jwk-cache-ttl-minutes: 60
+
+  # Optional: Configure token validation
+  issuer: ${JWT_ISSUER:#{null}}
+  audience: ${JWT_AUDIENCE:#{null}}
+
+  header-name: Authorization
+  token-prefix: "Bearer "
+  cache:
+    ttl-seconds: 3600
+
